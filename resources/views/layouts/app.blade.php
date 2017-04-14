@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Forum') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -36,14 +36,33 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name', 'Forum') }}
                     </a>
+                    
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                       <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Threads <span class="caret"></span></a>
+                          <ul class="dropdown-menu">
+                             <li><a href="{{ url('threads') }}">All Threads</a></li>
+                             @if(Auth::check())
+                                <li><a href="/threads?by={{ Auth::user()->name }}">My Threads</a></li>
+                             @endif
+                          </ul>
+                       </li>
+                       <li><a href="{{ url('threads/create') }}">New Thread</a></li>
+                       <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Channels <span class="caret"></span></a>
+                          <ul class="dropdown-menu">
+                            @foreach($channels as $channel)
+                                <li><a href="/threads/{{$channel->slug}}">{{ $channel->name }}</a></li>
+                            @endforeach
+                          </ul>
+                        </li>
+                       
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -66,10 +85,12 @@
                                             Logout
                                         </a>
 
+
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
+                                    
                                 </ul>
                             </li>
                         @endif
